@@ -1,23 +1,16 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-const receiptRoutes = require('./src/routes/receiptRoutes');
-const swaggerDefinition = require('./swaggerDef');
+const receiptRoutes = require('./routes/receiptRoutes');
+const swaggerDefinition = require('../swaggerDef');
 
 const app = express();
 
-// Swagger setup
-const specs = swaggerJsdoc({
-  swaggerDefinition,
-  apis: ['./src/routes/*.js']
-});
+// Initialize Swagger
+const specs = swaggerJsdoc(swaggerDefinition);
 
 app.use(express.json());
-
-// Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-// Routes
 app.use('/receipts', receiptRoutes);
 
 const PORT = process.env.PORT || 3000;
