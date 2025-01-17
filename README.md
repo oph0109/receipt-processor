@@ -1,64 +1,89 @@
 # Receipt Processor
 
-A REST API service that processes receipts and calculates reward points based on specific rules.
+Process receipts and calculate points based on rules. Built with Node.js and Express.
 
-## Features
+## Quick Start
 
-- Process receipts and calculate points based on various rules
-- Retrieve points for processed receipts
-- OpenAPI/Swagger documentation
-- Docker support
-- Automated tests
-
-## Rules for Points Calculation
-
-Points are awarded based on the following rules:
-
-1. One point for every alphanumeric character in the retailer name
-2. 50 points if the total is a round dollar amount with no cents
-3. 25 points if the total is a multiple of 0.25
-4. 5 points for every two items on the receipt
-5. If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer
-6. 6 points if the day in the purchase date is odd
-7. 10 points if the time of purchase is between 2:00pm and 4:00pm
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18 or higher
-- npm
-- Docker (optional)
-
-### Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/your-username/receipt-processor.git
-```
-
-2. Navigate to the project directory:
-
-```bash
-cd receipt-processor
-```
-
-3. Install dependencies:
-
+With Node:
 ```bash
 npm install
-```
-
-4. Run the server:
-
-```bash
 npm start
 ```
 
-5. Access the API documentation at:
+With Docker:
+```bash
+docker build -t receipt-processor .
+docker run -p 3000:3000 receipt-processor
+```
+
+View the API docs at `http://localhost:3000/api-docs`
+
+## Points Rules
+
+- One point per alphanumeric character in retailer name
+- 50 points if total is a round dollar amount
+- 25 points if total is a multiple of 0.25
+- 5 points for every two items
+- For items with descriptions of length divisible by 3: multiply price by 0.2 and round up
+- 6 points if purchase day is odd
+- 10 points if purchase time is 2:00pm - 4:00pm
+
+## API Endpoints
+
+### Process Receipt
+```bash
+POST /receipts/process
+
+{
+  "retailer": "Target",
+  "purchaseDate": "2022-01-01",
+  "purchaseTime": "13:01",
+  "items": [
+    {
+      "shortDescription": "Mountain Dew 12PK",
+      "price": "6.49"
+    }
+  ],
+  "total": "6.49"
+}
+```
+
+### Get Points
+```bash
+GET /receipts/{id}/points
+```
+
+## Development
 
 ```bash
-http://localhost:3000/api-docs
+# Run with hot reload
+npm run dev
+
+# Run tests
+npm test
 ```
+
+## Validation
+
+- Retailer: alphanumeric, spaces, hyphens, '&'
+- Date: YYYY-MM-DD
+- Time: HH:MM (24hr)
+- Items: At least one
+- Prices: XX.XX format
+
+## Project Structure
+```
+src/
+├── server.js
+├── controllers/
+├── routes/
+├── services/
+└── __tests__/
+```
+
+## Requirements
+
+- Node.js 18+
+- npm
+- Docker (optional)
 
