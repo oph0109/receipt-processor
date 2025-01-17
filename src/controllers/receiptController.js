@@ -1,12 +1,11 @@
 const receiptService = require('../services/receiptService');
 
 class ReceiptController {
-    processReceipt(req, res) {
+    process(req, res) {
         try {
-            const receipt = req.body;
-            const id = receiptService.processReceipt(receipt);
+            const id = receiptService.processReceipt(req.body);
             res.json({ id });
-        } catch (error) {
+        } catch (err) {
             res.status(400).json({ 
                 error: 'The receipt is invalid. Please verify input.'
             });
@@ -14,14 +13,13 @@ class ReceiptController {
     }
 
     getPoints(req, res) {
-        const { id } = req.params;
-        const receiptData = receiptService.getReceiptPoints(id);
-
-        if (!receiptData) {
+        const data = receiptService.getPoints(req.params.id);
+        
+        if (!data) {
             return res.status(404).json({ error: 'Receipt not found' });
         }
 
-        res.json({ points: receiptData.points });
+        res.json({ points: data.points });
     }
 }
 

@@ -1,12 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const receiptController = require('../controllers/receiptController');
+const router = require('express').Router()
+const receipts = require('../controllers/receiptController')
 
 /**
  * @swagger
  * /receipts/process:
  *   post:
- *     summary: Process a receipt and return points
+ *     summary: Process a receipt
  *     tags: [Receipts]
  *     requestBody:
  *       required: true
@@ -16,7 +15,7 @@ const receiptController = require('../controllers/receiptController');
  *             $ref: '#/components/schemas/Receipt'
  *     responses:
  *       200:
- *         description: Receipt processed successfully
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
@@ -24,25 +23,14 @@ const receiptController = require('../controllers/receiptController');
  *               properties:
  *                 id:
  *                   type: string
- *                   example: "7fb1377b-b223-49d9-a31a-5a02701dd310"
- *       400:
- *         description: Invalid receipt
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "The receipt is invalid. Please verify input."
  */
-router.post('/process', receiptController.processReceipt.bind(receiptController));
+router.post('/process', receipts.process.bind(receipts))
 
 /**
  * @swagger
  * /receipts/{id}/points:
  *   get:
- *     summary: Get points for a receipt
+ *     summary: Get receipt points
  *     tags: [Receipts]
  *     parameters:
  *       - in: path
@@ -50,11 +38,9 @@ router.post('/process', receiptController.processReceipt.bind(receiptController)
  *         required: true
  *         schema:
  *           type: string
- *         description: Receipt ID
- *         example: "7fb1377b-b223-49d9-a31a-5a02701dd310"
  *     responses:
  *       200:
- *         description: Points retrieved successfully
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
@@ -62,18 +48,7 @@ router.post('/process', receiptController.processReceipt.bind(receiptController)
  *               properties:
  *                 points:
  *                   type: integer
- *                   example: 32
- *       404:
- *         description: Receipt not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Receipt not found"
  */
-router.get('/:id/points', receiptController.getPoints.bind(receiptController));
+router.get('/:id/points', receipts.getPoints.bind(receipts))
 
-module.exports = router; 
+module.exports = router 

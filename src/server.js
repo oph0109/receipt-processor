@@ -1,20 +1,17 @@
 const express = require('express');
-const swaggerUi = require('swagger-ui-express');
+const swagger = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const receiptRoutes = require('./routes/receiptRoutes');
-const swaggerDefinition = require('../swaggerDef');
+const swaggerDef = require('../swaggerDef');
 
 const app = express();
-
-// Initialize Swagger
-const specs = swaggerJsdoc(swaggerDefinition);
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/api-docs', swagger.serve, swagger.setup(swaggerJsdoc(swaggerDef)));
 app.use('/receipts', receiptRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+    console.log(`API docs at http://localhost:${port}/api-docs`);
 });
